@@ -2,12 +2,12 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 public class EchoClient {
-  private String host="localhost";
-  private int port=8000;
-  private Socket socket;
+  private String mHost="localhost";
+  private int mPort=8000;
+  private Socket mSocket;
   
   public EchoClient()throws IOException{
-     socket=new Socket(host,port);  
+     mSocket=new Socket(mHost,mPort);  
   }
   public static void main(String args[])throws IOException{
     new EchoClient().talk();
@@ -22,14 +22,14 @@ public class EchoClient {
   }
   public void talk()throws IOException {
     try{
-      BufferedReader br=getReader(socket);
-      PrintWriter pw=getWriter(socket);
+      BufferedReader br=getReader(mSocket);
+      PrintWriter pw=getWriter(mSocket);
       BufferedReader localReader=new BufferedReader(new InputStreamReader(System.in));
       String msg=null;
       while((msg=localReader.readLine())!=null){
 
         pw.println(msg);
-        System.out.println(br.readLine());
+        System.out.println("echo:"+br.readLine());
 
         if(msg.equals("bye"))
           break;
@@ -37,14 +37,8 @@ public class EchoClient {
     }catch(IOException e){
        e.printStackTrace();
     }finally{
-       try{socket.close();}catch(IOException e){e.printStackTrace();}
+       try{mSocket.close();}catch(IOException e){e.printStackTrace();}
     }
   }
 }
 
-
-/****************************************************
- * 作者：孙卫琴                                     *
- * 来源：<<Java网络编程精解>>                       *
- * 技术支持网址：www.javathinker.org                *
- ***************************************************/

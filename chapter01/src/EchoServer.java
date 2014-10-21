@@ -1,12 +1,12 @@
 import java.io.*;
 import java.net.*;
 public class EchoServer {
-  private int port=8000;
-  private ServerSocket serverSocket;
+  private int mPort=8000;
+  private ServerSocket mServerSocket;
 
   public EchoServer() throws IOException {
-    serverSocket = new ServerSocket(port);
-    System.out.println("服务器启动");
+    mServerSocket = new ServerSocket(mPort);
+    System.out.println("server launched, listen:"+mPort);
   }
 
   public String echo(String msg) {
@@ -26,7 +26,7 @@ public class EchoServer {
     while (true) {
       Socket socket=null;
       try {
-        socket = serverSocket.accept();  //等待客户连接
+        socket = mServerSocket.accept();  //wait client connect
         System.out.println("New connection accepted " 
                         +socket.getInetAddress() + ":" +socket.getPort());
         BufferedReader br =getReader(socket);
@@ -36,14 +36,18 @@ public class EchoServer {
         while ((msg = br.readLine()) != null) {
           System.out.println(msg); 
           pw.println(echo(msg));
-          if (msg.equals("bye")) //如果客户发送的消息为“bye”，就结束通信
-            break;
+          if (msg.equals("bye")) {
+              // finish communication by client send msg "bye"
+              System.out.println("recv bye");
+              break;
+          }
         }
       }catch (IOException e) {
          e.printStackTrace();
       }finally {
          try{
-           if(socket!=null)socket.close();  //断开连接
+           System.out.println("finally, close");
+           if(socket!=null)socket.close();  //disconnect
          }catch (IOException e) {e.printStackTrace();}
       }
     }
@@ -53,10 +57,3 @@ public class EchoServer {
     new EchoServer().service();
   }
 }
-
-
-/****************************************************
- * 作者：孙卫琴                                     *
- * 来源：<<Java网络编程精解>>                       *
- * 技术支持网址：www.javathinker.org                *
- ***************************************************/
