@@ -2,14 +2,15 @@ import java.io.*;
 import java.net.*;
 public class SimpleServer {
   public static void main(String args[])throws Exception {
-    ServerSocket serverSocket = new ServerSocket(8000,2);  //连接请求队列的长度为2
-    Thread.sleep(360000);   //睡眠6分钟
+      long now = System.currentTimeMillis();
+    System.out.println("now:"+now);
+    
+    ServerSocket serverSocket = new ServerSocket(8000,2);  //the request connection queue length is 2
+    long bs = System.currentTimeMillis();
+    System.out.println("begin sleep:"+bs+", during:"+ (bs - now));
+    Thread.sleep(300000);
+    long wake = System.currentTimeMillis();
+    System.out.println("wake:"+wake+", during:"+(wake - bs));
   }
 }
 
-
-/****************************************************
- * 作者：孙卫琴                                     *
- * 来源：<<Java网络编程精解>>                       *
- * 技术支持网址：www.javathinker.org                *
- ***************************************************/

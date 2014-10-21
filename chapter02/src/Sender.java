@@ -5,11 +5,11 @@ public class Sender {
   private String host="localhost";
   private int port=8000;
   private Socket socket;
-  private static int stopWay=1;  //结束通信的方式
-  private final int NATURAL_STOP=1; //自然结束
-  private final int SUDDEN_STOP=2;  //突然终止程序
-  private final int SOCKET_STOP=3;  //关闭Socket，再结束程序
-  private final int OUTPUT_STOP=4;  //关闭输出流，再结束程序
+  private static int stopWay=1;  //finish connection way
+  private final int NATURAL_STOP=1; //natural
+  private final int SUDDEN_STOP=2;  //sudden
+  private final int SOCKET_STOP=3;  //close socket
+  private final int OUTPUT_STOP=4;  //close output stream
 
   public Sender()throws IOException{
      socket=new Socket(host,port);
@@ -31,18 +31,18 @@ public class Sender {
       pw.println(msg);
       System.out.println("send:"+msg);
       Thread.sleep(500);  
-      if(i==2){  //终止程序，结束通信
+      if(i==2){  //stop program, close connection
         if(stopWay==SUDDEN_STOP){
-          System.out.println("突然终止程序");
+          System.out.println("sudden stop program");
           System.exit(0);
         }else if(stopWay==SOCKET_STOP){
-          System.out.println("关闭Socket并终止程序");
+          System.out.println("close socket and stop program");
           socket.close();
           break;
         }else if(stopWay==OUTPUT_STOP){
           socket.shutdownOutput();
   
-        System.out.println("关闭输出流并终止程序");
+        System.out.println("close input and stop program");
           break;
         }
       }  
@@ -56,7 +56,7 @@ public class Sender {
 
 
 /****************************************************
- * 作者：孙卫琴                                     *
- * 来源：<<Java网络编程精解>>                       *
- * 技术支持网址：www.javathinker.org                *
+ * 锟斤拷锟竭ｏ拷锟斤拷锟斤拷锟斤拷                                     *
+ * 锟斤拷源锟斤拷<<Java锟斤拷锟斤拷锟教撅拷锟斤拷>>                       *
+ * 锟斤拷锟斤拷支锟斤拷锟斤拷址锟斤拷www.javathinker.org                *
  ***************************************************/
