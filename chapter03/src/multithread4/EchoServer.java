@@ -4,50 +4,50 @@ import java.net.*;
 import java.util.concurrent.*;
 
 public class EchoServer {
-  private int port=8000;
-  private ServerSocket serverSocket;
-  private ExecutorService executorService; //线程池
-  private final int POOL_SIZE=4;  //单个CPU时线程池中工作线程的数目
+  private int mPort=8000;
+  private ServerSocket mServerSocket;
+  private ExecutorService mExecutorService; // thread pool
+  private final int POOL_SIZE=4;  //single CPU working thread number in thread pool
   
-  private int portForShutdown=8001;  //用于监听关闭服务器命令的端口
-  private ServerSocket serverSocketForShutdown;
-  private boolean isShutdown=false; //服务器是否已经关闭
+  private int mPortForShutdown=8001;  // listen shutdown server cmd
+  private ServerSocket mServerSocketForShutdown;
+  private boolean mIsShutdown=false; // server is shutdown or not
 
-  private Thread shutdownThread=new Thread(){   //负责关闭服务器的线程
+  private Thread mShutdownThread=new Thread(){   // charge of shutdown server
     public void start(){
-      this.setDaemon(true);  //设置为守护线程（也称为后台线程）
+      this.setDaemon(true);  // set daemon thread
       super.start();
     }
 
     public void run(){
-      while (!isShutdown) {
+      while (!mIsShutdown) {
         Socket socketForShutdown=null;
         try {
-          socketForShutdown= serverSocketForShutdown.accept();
+          socketForShutdown= mServerSocketForShutdown.accept();
           BufferedReader br = new BufferedReader(
                             new InputStreamReader(socketForShutdown.getInputStream()));
           String command=br.readLine();
          if(command.equals("shutdown")){
             long beginTime=System.currentTimeMillis(); 
-            socketForShutdown.getOutputStream().write("服务器正在关闭\r\n".getBytes());
-            isShutdown=true;
-            //请求关闭线程池
-//线程池不再接收新的任务，但是会继续执行完工作队列中现有的任务
-            executorService.shutdown();  
+            socketForShutdown.getOutputStream().write("Server is shuting down\r\n".getBytes());
+            mIsShutdown=true;
+            //request shutdown thread pool
+//thread pool will not accpet new task, but will continue to finish task in work queue
+            mExecutorService.shutdown();  
             
-            //等待关闭线程池，每次等待的超时时间为30秒
-            while(!executorService.isTerminated())
-              executorService.awaitTermination(30,TimeUnit.SECONDS); 
+            //wait for close thread pool, timeout 30 seconds each time
+            while(!mExecutorService.isTerminated())
+              mExecutorService.awaitTermination(30,TimeUnit.SECONDS); 
             
-            serverSocket.close(); //关闭与EchoClient客户通信的ServerSocket 
+            mServerSocket.close(); // close ServerSocket communicate with EchoClient 
             long endTime=System.currentTimeMillis(); 
-            socketForShutdown.getOutputStream().write(("服务器已经关闭，"+
-                "关闭服务器用了"+(endTime-beginTime)+"毫秒\r\n").getBytes());
+            socketForShutdown.getOutputStream().write(("Server shutdown, "+
+                "cost"+(endTime-beginTime)+"millseconds\r\n").getBytes());
             socketForShutdown.close();
-            serverSocketForShutdown.close();
+            mServerSocketForShutdown.close();
             
           }else{
-            socketForShutdown.getOutputStream().write("错误的命令\r\n".getBytes());
+            socketForShutdown.getOutputStream().write("wrong cmd\r\n".getBytes());
             socketForShutdown.close();
           }  
         }catch (Exception e) {
@@ -58,35 +58,35 @@ public class EchoServer {
   };
 
   public EchoServer() throws IOException {
-    serverSocket = new ServerSocket(port);
-    serverSocket.setSoTimeout(60000); //设定等待客户连接的超过时间为60秒
-    serverSocketForShutdown = new ServerSocket(portForShutdown);
+    mServerSocket = new ServerSocket(mPort);
+    mServerSocket.setSoTimeout(60000); //the time out of waiting customer connect is 60 second
+    mServerSocketForShutdown = new ServerSocket(mPortForShutdown);
 
-    //创建线程池
-    executorService= Executors.newFixedThreadPool( 
+    //create thread pool
+    mExecutorService= Executors.newFixedThreadPool( 
 	    Runtime.getRuntime().availableProcessors() * POOL_SIZE);
     
-    shutdownThread.start(); //启动负责关闭服务器的线程
-    System.out.println("服务器启动");
+    mShutdownThread.start(); //launch thread that charge shutdown server
+    System.out.println("Serve launch");
   }
   
   public void service() {
-    while (!isShutdown) {
+    while (!mIsShutdown) {
       Socket socket=null;
       try {
-        socket = serverSocket.accept();  //可能会抛出SocketTimeoutException和SocketException
-        socket.setSoTimeout(60000);  //把等待客户发送数据的超时时间设为60秒          
-        executorService.execute(new Handler(socket));  //可能会抛出RejectedExecutionException
+        socket = mServerSocket.accept();  
+        socket.setSoTimeout(60000);  //the time out of waiting customer send data is 60 second
+        mExecutorService.execute(new Handler(socket));  //maybe RejectedExecutionException
       }catch(SocketTimeoutException e){
-         //不必处理等待客户连接时出现的超时异常
+         //not handle timeout exception waiting for customer connection
       }catch(RejectedExecutionException e){
          try{
            if(socket!=null)socket.close();
          }catch(IOException x){}
          return;
       }catch(SocketException e) {
-         //如果是由于在执行serverSocket.accept()方法时，
-         //ServerSocket被ShutdownThread线程关闭而导致的异常，就退出service()方法
+         // if during serverSocket.accept(),
+         //the exception due to ServerSocket shutdown by ShutdownThread, then exit method service()
          if(e.getMessage().indexOf("socket closed")!=-1)return;
        }catch(IOException e) {
          e.printStackTrace();
@@ -137,10 +137,3 @@ class Handler implements Runnable{
     }
   }
 }
-
-
-/****************************************************
- * 作者：孙卫琴                                     *
- * 来源：<<Java网络编程精解>>                       *
- * 技术支持网址：www.javathinker.org                *
- ***************************************************/

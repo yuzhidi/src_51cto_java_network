@@ -7,16 +7,17 @@ public class EchoServer {
 
   public EchoServer() throws IOException {
     serverSocket = new ServerSocket(port);
-    System.out.println("服务器启动");
+    System.out.println("server launched");
   }
 
   public void service() {
     while (true) {
       Socket socket=null;
       try {
-        socket = serverSocket.accept();  //接收客户连接
-        Thread workThread=new Thread(new Handler(socket));  //创建一个工作线程
-        workThread.start();  //启动工作线程
+        socket = serverSocket.accept();
+        Thread workThread=new Thread(new Handler(socket));   // create a work thread
+        System.out.println("workThread.getId():"+workThread.getId());
+        workThread.start();  //launch work thread
       }catch (IOException e) {
          e.printStackTrace();
       }
@@ -28,7 +29,7 @@ public class EchoServer {
   }
 }
 
-class Handler implements Runnable{
+class Handler implements Runnable{   // in charge of connect with a single custom
   private Socket socket;
   public Handler(Socket socket){
     this.socket=socket;
@@ -67,10 +68,3 @@ class Handler implements Runnable{
     }
   }
 }
-
-
-/****************************************************
- * 作者：孙卫琴                                     *
- * 来源：<<Java网络编程精解>>                       *
- * 技术支持网址：www.javathinker.org                *
- ***************************************************/

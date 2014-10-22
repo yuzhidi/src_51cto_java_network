@@ -1,25 +1,18 @@
 import java.net.*;
 public class Client {
   public static void main(String args[])throws Exception{
-    final int length=100;
+    final int mLength=100;
     String host="localhost";
     int port=8000;
 
-    Socket[] sockets=new Socket[length];
-    for(int i=0;i<length;i++){  // ‘ÕºΩ®¡¢100¥Œ¡¨Ω”
+    Socket[] sockets=new Socket[mLength];
+    for(int i=0;i<mLength;i++){  // try to establish 100 connections
       sockets[i]=new Socket(host, port);
-      System.out.println("µ⁄"+(i+1)+"¥Œ¡¨Ω”≥…π¶");
+      System.out.println("Á¨¨"+(i+1)+"Ê¨°ËøûÊé•ÊàêÂäü");
     }
     Thread.sleep(3000);
-    for(int i=0;i<length;i++){
-      sockets[i].close();  //∂œø™¡¨Ω”
+    for(int i=0;i<mLength;i++){
+      sockets[i].close();  //Êñ≠ÂºÄËøûÊé•
     } 
   }
 }
-
-
-/****************************************************
- * ◊˜’ﬂ£∫ÀÔŒ¿«Ÿ                                     *
- * ¿¥‘¥£∫<<JavaÕ¯¬Á±‡≥Ãæ´Ω‚>>                       *
- * ºº ı÷ß≥÷Õ¯÷∑£∫www.javathinker.org                *
- ***************************************************/
