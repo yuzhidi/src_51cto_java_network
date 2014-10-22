@@ -8,8 +8,9 @@ public class SimpleServer {
       Socket socket=serverSocket.accept();
       OutputStream out=socket.getOutputStream();
       ObjectOutputStream oos=new ObjectOutputStream(out);
-      oos.writeObject(object);
-      oos.writeObject(object);
+      oos.writeObject(object); // first time
+      oos.writeObject(object); // second time send same object
+      oos.writeFloat(1.2f); // leo add
       oos.close();
       socket.close();
     }
@@ -41,14 +42,7 @@ public class SimpleServer {
     }else{
       object="Hello";
     }
-    System.out.println("待发送的对象信息："+object);
+    System.out.println("waiting for sent object:"+object);
     new SimpleServer().send(object);
   }
 }
-
-
-/****************************************************
- * 作者：孙卫琴                                     *
- * 来源：<<Java网络编程精解>>                       *
- * 技术支持网址：www.javathinker.org                *
- ***************************************************/

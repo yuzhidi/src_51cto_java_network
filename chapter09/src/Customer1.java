@@ -1,19 +1,19 @@
 import java.io.*;
 public class Customer1 implements Serializable {
-  private static int count; //用于计算Customer对象的数目
+  private static int count; // count Customer
   private static final int MAX_COUNT=1000;
   private String name;
   private transient String password;
   
   static{
-     System.out.println("调用Customer1类的静态代码块");
+     System.out.println("call Customer1 static block");
   }
   public Customer1(){
-    System.out.println("调用Customer1类的不带参数的构造方法");
+    System.out.println("call Customer1 constructor without parameter");
     count++;
   }
   public Customer1(String name, String password) {
-    System.out.println("调用Customer1类的带参数的构造方法");
+    System.out.println("call Customer1 constructor with parameter");
     this.name=name;
     this.password=password;
     count++;
@@ -25,10 +25,3 @@ public class Customer1 implements Serializable {
            +" password="+ password;
   }
 }
-
-
-/****************************************************
- * 作者：孙卫琴                                     *
- * 来源：<<Java网络编程精解>>                       *
- * 技术支持网址：www.javathinker.org                *
- ***************************************************/

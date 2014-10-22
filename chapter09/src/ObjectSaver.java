@@ -4,20 +4,27 @@ import java.util.*;
 public class ObjectSaver{
 
   public static void main(String agrs[]) throws Exception {
-    ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("D:\\objectFile.obj"));
+    ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("objectFile.obj"));
 
     String obj1="hello";
     Date obj2=new Date();
     Customer obj3=new Customer("Tom",20);
-    //–Ú¡–ªØ∂‘œÛ
+    // Serialize
     out.writeObject(obj1);
     out.writeObject(obj2);
     out.writeObject(obj3);
     out.writeInt(123);
+    //leo add start
+    out.writeInt(456);
+    out.writeFloat(0.1f);
+    out.writeBoolean(true);
+    out.writeChars("chars");
+    out.writeUTF("UTFstringÂ≠óÁ¨¶‰∏≤");
     out.close();
-    
-    //∑¥–Ú¡–ªØ∂‘œÛ 
-    ObjectInputStream in=new ObjectInputStream(new FileInputStream("D:\\objectFile.obj"));
+    //leo add end
+
+    //deserialize
+    ObjectInputStream in=new ObjectInputStream(new FileInputStream("objectFile.obj"));
     String obj11 = (String)in.readObject();
     System.out.println("obj11:"+obj11);
     System.out.println("obj11==obj1:"+(obj11==obj1));
@@ -33,6 +40,18 @@ public class ObjectSaver{
     int var= in.readInt();
     System.out.println("var:"+var);
 
+    // leo add start
+    int var2= in.readInt();
+    System.out.println("var2:"+var2);
+    float f = in.readFloat();
+    System.out.println("float:"+f);
+    Boolean b = in.readBoolean();
+    System.out.println("Boolean:"+b);
+//    String chars = in.readObject();
+//    System.out.println("String:"+chars);
+//    String UTFstring = (String)in.readObject();
+//    System.out.println("UTFstring:"+UTFstring);
+    // leo add end
     in.close();
   }
 }
@@ -48,10 +67,3 @@ class Customer implements Serializable{
 
   public String toString(){return "name="+name+",age="+age;}
 }
-
-
-/****************************************************
- * ◊˜’ﬂ£∫ÀÔŒ¿«Ÿ                                     *
- * ¿¥‘¥£∫<<JavaÕ¯¬Á±‡≥Ãæ´Ω‚>>                       *
- * ºº ı÷ß≥÷Õ¯÷∑£∫www.javathinker.org                *
- ***************************************************/
