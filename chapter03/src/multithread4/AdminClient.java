@@ -6,11 +6,11 @@ public class AdminClient{
     Socket socket=null;
     try{
       socket=new Socket("localhost",8001);
-      //发送关闭命令
+      // send shutdown cmd
       OutputStream socketOut=socket.getOutputStream();
       socketOut.write("shutdown\r\n".getBytes());
  
-      //接收服务器的反馈
+      // read server response
       BufferedReader br = new BufferedReader(
                                   new InputStreamReader(socket.getInputStream()));
       String msg=null;
@@ -26,9 +26,3 @@ public class AdminClient{
   }
 }
 
-
-/****************************************************
- * 作者：孙卫琴                                     *
- * 来源：<<Java网络编程精解>>                       *
- * 技术支持网址：www.javathinker.org                *
- ***************************************************/

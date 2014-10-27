@@ -28,7 +28,12 @@ public class EchoServer {
                             new InputStreamReader(socketForShutdown.getInputStream()));
           String command=br.readLine();
          if(command.equals("shutdown")){
-            long beginTime=System.currentTimeMillis(); 
+            long beginTime=System.currentTimeMillis();
+            //leo add for test start
+            if(LeotestSocket != null) {
+                LeotestSocket.close();
+            }
+            //leo add for test end
             socketForShutdown.getOutputStream().write("Server is shuting down\r\n".getBytes());
             mIsShutdown=true;
             //request shutdown thread pool
@@ -70,11 +75,14 @@ public class EchoServer {
     System.out.println("Serve launch");
   }
   
+  //leo add
+  Socket LeotestSocket;
   public void service() {
     while (!mIsShutdown) {
       Socket socket=null;
       try {
-        socket = mServerSocket.accept();  
+        socket = mServerSocket.accept();
+        LeotestSocket = socket;
         socket.setSoTimeout(60000);  //the time out of waiting customer send data is 60 second
         mExecutorService.execute(new Handler(socket));  //maybe RejectedExecutionException
       }catch(SocketTimeoutException e){
