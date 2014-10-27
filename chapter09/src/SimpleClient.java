@@ -6,14 +6,20 @@ public class SimpleClient {
     Socket socket = new Socket("localhost",8000);
     InputStream in=socket.getInputStream();
     ObjectInputStream ois=new ObjectInputStream(in);
-    Object object1=ois.readObject();
-    Object object2=ois.readObject();
+//    Object object1=ois.readObject();
+//    Object object2=ois.readObject();
+    int i = ois.readInt();
     float f = ois.readFloat();
-    System.out.println(object1);
-    System.out.println(object2);
+    long l = ois.readLong();
+    double d = ois.readDouble();
+//    System.out.println(object1);
+//    System.out.println(object2);
+    System.out.println(i);
     System.out.println(f);
-    System.out.println("Is object1 object2 are same:"
-                       +(object1==object2));
+    System.out.println(l);
+    System.out.println(d);
+//    System.out.println("Is object1 object2 are same:"
+//                       +(object1==object2));
   }
   public static void main(String args[])throws Exception {
     new SimpleClient().receive(); 

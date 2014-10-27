@@ -8,9 +8,12 @@ public class SimpleServer {
       Socket socket=serverSocket.accept();
       OutputStream out=socket.getOutputStream();
       ObjectOutputStream oos=new ObjectOutputStream(out);
-      oos.writeObject(object); // first time
-      oos.writeObject(object); // second time send same object
+//      oos.writeObject(object); // first time
+//      oos.writeObject(object); // second time send same object
+      oos.writeInt(4); // leo add
       oos.writeFloat(1.2f); // leo add
+      oos.writeLong(65536); // leo add
+      oos.writeDouble(65.65); // leo add
       oos.close();
       socket.close();
     }
