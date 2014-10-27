@@ -1,5 +1,3 @@
-//与第1章的EchoClient类相同
-
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -28,14 +26,18 @@ public class EchoClient {
       PrintWriter pw=getWriter(socket);
       BufferedReader localReader=new BufferedReader(new InputStreamReader(System.in));
       String msg=null;
-      while((msg=localReader.readLine())!=null){
-
-        pw.println(msg);
-        System.out.println(br.readLine());
-
-        if(msg.equals("bye"))
-          break;
-      }
+      System.out.println("br.read():"+br.read());
+      System.out.println("br.read():"+br.read());
+      System.out.println("br.read():"+br.read());
+      System.out.println("br.read():"+br.read());
+//      while((msg=localReader.readLine())!=null){
+//
+//        pw.println(msg);
+//        System.out.println(br.readLine());
+//
+//        if(msg.equals("bye"))
+//          break;
+//      }
     }catch(IOException e){
        e.printStackTrace();
     }finally{
@@ -43,10 +45,3 @@ public class EchoClient {
     }
   }
 }
-
-
-/****************************************************
- * 作者：孙卫琴                                     *
- * 来源：<<Java网络编程精解>>                       *
- * 技术支持网址：www.javathinker.org                *
- ***************************************************/
