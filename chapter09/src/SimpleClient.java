@@ -1,25 +1,38 @@
 import java.io.*;
 import java.net.*;
+import java.nio.ByteBuffer;
 import java.util.*;
 public class SimpleClient {
   public void receive()throws Exception{
     Socket socket = new Socket("localhost",8000);
     InputStream in=socket.getInputStream();
-    ObjectInputStream ois=new ObjectInputStream(in);
-//    Object object1=ois.readObject();
-//    Object object2=ois.readObject();
-    int i = ois.readInt();
-    float f = ois.readFloat();
-    long l = ois.readLong();
-    double d = ois.readDouble();
-//    System.out.println(object1);
-//    System.out.println(object2);
-    System.out.println(i);
-    System.out.println(f);
-    System.out.println(l);
-    System.out.println(d);
-//    System.out.println("Is object1 object2 are same:"
-//                       +(object1==object2));
+    byte[] buffer= ByteBuffer.allocate(16).array();
+    
+
+    System.out.println(in.read(buffer));
+    for(int i=0;i< 15;i++) {
+        System.out.println(Byte.toString(buffer[i]));
+    }
+    byteToInt2(buffer, 0);
+    byteToInt2(buffer, 4);
+    byteToInt2(buffer, 8);
+    byteToInt2(buffer, 12);
+    in.close();
+    socket.close();
+  }
+  
+  public static int byteToInt2(byte[] b, int index) {
+
+      int mask = 0xff;
+      int temp = 0;
+      int n = 0;
+      for (int i = 0; i < 4; i++) {
+          n <<= 8;
+          temp = b[i+index] & mask;
+          n |= temp;
+      }
+      System.out.println(n);
+      return n;
   }
   public static void main(String args[])throws Exception {
     new SimpleClient().receive(); 

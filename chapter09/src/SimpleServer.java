@@ -1,61 +1,57 @@
 import java.io.*;
 import java.net.*;
+import java.nio.ByteBuffer;
 import java.util.*;
 
 public class SimpleServer {
     private static final int MAGIC_NUMBER = 0xFFFFFFFF;
+    boolean run;
 
     public void send(Object object) throws IOException {
         ServerSocket serverSocket = new ServerSocket(8000);
         Socket socket = serverSocket.accept();
-        OutputStream out = socket.getOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(out);
-        // while (true) {
-        System.out.println("server write");
-        senddata(oos);
-        // // oos.writeObject(object); // first time
-        // // oos.writeObject(object); // second time send same object
-        // oos.writeInt(4); // leo add
-        // // oos.writeInt(17); // leo add
-        // // oos.writeInt(256); // leo add
-        // // oos.writeInt(1); // leo add
-        // oos.writeFloat(1.2f); // leo add
-        // oos.writeLong(65536); // leo add
-        // oos.writeDouble(65.65); // leo add
-        // }
-        oos.close();
+        OutputStream os = socket.getOutputStream();
+//        while (run) {
+            System.out.println("server write");
+            senddata(os);
+//        }
+        os.close();
         socket.close();
     }
 
-    private void senddata(ObjectOutputStream oos) {
+    static private void setInt(int i, byte result[], int index) {
+        // BIG-ENDIAN
+        result[index + 0] = (byte) ((i >> 24) & 0xFF);
+        result[index + 1] = (byte) ((i >> 16) & 0xFF);
+        result[index + 2] = (byte) ((i >> 8) & 0xFF);
+        result[index + 3] = (byte) (i & 0xFF);
+    }
+
+    private void senddata(OutputStream oos) {
+        ByteBuffer buffer = ByteBuffer.allocate(16);
         // use 30.542021, 104.069157 to test
         double latitude = 30.542021;
         double longitude = 104.069157;
-        try {
-            // if (mLocation == null) {
-            // Log.e(TAG, "senddata(), location is null, simulation!");
-            // } else {
-            // latitude = mLocation.getLatitude();
-            // longitude = mLocation.getLongitude();
-            // }
 
-            oos.writeInt(MAGIC_NUMBER);
+        try {
+
             double temp = latitude;
             int high = (int) temp;
             int low = (int) ((temp - high) * 100000000);// 10-8
             System.out.println("senddata() getLatitude:" + temp + ", high:"
                     + high + " ,low:" + low);
-            oos.writeInt(high);
-            oos.writeInt(low);
+            byte[] bytebuffer = buffer.array();
+            setInt(high, bytebuffer, 0);
+            setInt(low, bytebuffer, 4);
 
             temp = longitude;
             high = (int) temp;
             low = (int) ((temp - high) * 100000000);// 10-8
             System.out.println("senddata() getLongitude:" + temp + ", high:"
                     + high + " ,low:" + low);
-            oos.writeInt(high);
-            oos.writeInt(low);
-
+            setInt(high, bytebuffer, 8);
+            setInt(low, bytebuffer, 12);
+            oos.write(bytebuffer);
             oos.flush();
         } catch (IOException e) {
             e.printStackTrace();
